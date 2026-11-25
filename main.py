@@ -14,13 +14,16 @@ ROAST = "My agent's favourite tool is me \u2014 it calls me for the answers, the
 
 TARGET = Path("/output/entry.txt")
 LIMIT = 140
+MIN = 1
 
 
 def check_roast(line: str) -> str:
     """Return the roast unchanged, or raise if it breaks the gate."""
     trimmed = line.strip()
-    if trimmed == "":
+    if len(trimmed) < MIN:
         raise ValueError("roast text is blank")
+    if any(ord(ch) < 0x20 and ch not in "\t" for ch in trimmed):
+        raise ValueError("roast text contains a control character")
     if "\n" in trimmed or "\r" in trimmed:
         raise ValueError("roast text must be a single line")
     if len(trimmed) > LIMIT:
@@ -35,6 +38,9 @@ def save_roast(line: str) -> int:
     final = check_roast(line)
     TARGET.parent.mkdir(parents=True, exist_ok=True)
     TARGET.write_text(final, encoding="utf-8", newline="")
+    written = TARGET.read_bytes()
+    if written != final.encode("utf-8"):
+        raise OSError("written bytes do not match the checked roast")
     return len(final)
 
 

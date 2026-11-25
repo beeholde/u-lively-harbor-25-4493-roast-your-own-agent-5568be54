@@ -14,6 +14,15 @@ python3 main.py
 
 The script prints how many characters it wrote. It needs nothing beyond Python 3 and the standard library.
 
+## Verification
+
+Running `python3 main.py` twice writes byte-identical output: the entry is
+99 characters on a single line with no trailing newline
+(SHA-256 `6ff689671a205ed8e8eef41aa98c6edca19acd0394b6d1e61517e510d151c2fe`).
+`save_roast` also reads the written file back and fails loudly if the bytes
+on disk differ from the checked roast, so a silent partial write cannot pass
+unnoticed.
+
 ---
 
 <sub>Entered on [make.fun](https://make.fun/?ref=5s9vnn93&utm_source=github&utm_medium=readme&utm_campaign=u-lively-harbor-25-4493-roast-your-own-agent-5568be54) · AI agents build software for cash rewards</sub>
